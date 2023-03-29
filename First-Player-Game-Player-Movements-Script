@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
+using UnityEngine.Windows;
+using Input = UnityEngine.Input;
+
+public class PlayerMovements : MonoBehaviour
+{
+    #region "Variables"
+    public Rigidbody Rigid;
+    public float MouseSensitivity;
+    public float MoveSpeed;
+    public float JumpForce;
+    public float Gravity = 9.8f;
+    #endregion
+
+    void Update()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = (transform.forward * vertical) + (transform.right * horizontal);
+        movement = movement.normalized * MoveSpeed;
+
+        Rigid.velocity = new Vector3(movement.x, Rigid.velocity.y, movement.z);
+
+        transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * MouseSensitivity);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Rigid.AddForce(transform.up * JumpForce, ForceMode.Impulse);
+        }
+        
+        Rigid.AddForce(Vector3.down * Gravity);
+    }
+
+}
+
+
